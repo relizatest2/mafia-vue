@@ -55,12 +55,6 @@ spec:
                         } else {
                             env.COMMIT_LIST = getCommitListNoLatest()
                         }
-                        echo 'Here should go env vars'
-                        echo env.COMMIT_TIME
-                        echo env.LATEST_COMMIT
-                        echo env.COMMIT_LIST
-                        echo env.GIT_BRANCH
-                        echo 'end of env vars'
                         if (!env.LATEST_COMMIT || env.COMMIT_LIST) {
                             try {
                                 container(name: 'kaniko', shell: '/busybox/sh') {
@@ -68,7 +62,7 @@ spec:
                                         withEnv(['PATH+EXTRA=/busybox']) {
                                             sh '''#!/busybox/sh
                                                 cp $DOCKER_CONFIG_JSON /kaniko/.docker/config.json
-                                                /kaniko/executor --context `pwd` --destination "$IMAGE_NAMESPACE/$IMAGE_NAME:latest" --digest-file=/shared-data/termination-log
+                                                /kaniko/executor --context `pwd` --destination "$IMAGE_NAMESPACE/$IMAGE_NAME:latest" --digest-file=/shared-data/termination-log --build-arg CI_ENV=Jenkins --build-arg GIT_COMMIT=$GIT_COMMIT --build-arg GIT_BRANCH=$GIT_BRANCH --build-arg VERSION=$VERSION
                                             '''
                                         }
                                     }
@@ -77,12 +71,10 @@ spec:
                                 env.STATUS = 'rejected'
                                 echo 'FAILED BUILD: ' + e.toString()
                             }
-                            echo 'build completed, before sha256 extraction'
                             env.SHA_256 = container(name: 'alpine') {
                                 sh(script: 'cat /shared-data/termination-log', returnStdout: true).trim()
                             }
-                            echo 'SHA 256 digest of our container'
-                            echo env.SHA_256
+                            echo 'SHA 256 digest of our container = ' env.SHA_256
                             addRelizaRelease(artId: "$IMAGE_NAMESPACE/$IMAGE_NAME", artType: "Docker")
                         } else {
                             echo 'Repeated build, skipping push'
