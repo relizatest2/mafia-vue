@@ -64,7 +64,7 @@ spec:
                         if (!env.LATEST_COMMIT || env.COMMIT_LIST) {
                             try {
                                 container(name: 'kaniko', shell: '/busybox/sh') {
-                                    withCredentials([file(credentialsId: 'docker-cred2', variable: 'DOCKER_CONFIG_JSON')]) {
+                                    withCredentials([file(credentialsId: 'docker-credentials', variable: 'DOCKER_CONFIG_JSON')]) {
                                         withEnv(['PATH+EXTRA=/busybox']) {
                                             sh '''#!/busybox/sh
                                                 cp $DOCKER_CONFIG_JSON /kaniko/.docker/config.json
@@ -79,9 +79,7 @@ spec:
                             }
                             echo 'build completed, before sha256 extraction'
                             env.SHA_256 = container(name: 'alpine') {
-                                sh(script: '''#!/bin/sh
-                                              cat /shared-data/termination-log
-                                          ''', returnStdout: true).trim()
+                                sh(script: 'cat /shared-data/termination-log', returnStdout: true).trim()
                             }
                             echo 'SHA 256 digest of our container'
                             echo env.SHA_256
