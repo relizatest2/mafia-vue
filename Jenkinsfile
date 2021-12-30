@@ -42,7 +42,6 @@ spec:
         stage('Build with Kaniko') {
             steps {
                 script {
-                    checkout scm
                     container(name: 'alpine') {
                         sh 'apk add git'
                     }
