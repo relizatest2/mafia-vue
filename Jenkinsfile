@@ -74,7 +74,7 @@ spec:
                             env.SHA_256 = container(name: 'alpine') {
                                 sh(script: 'cat /shared-data/termination-log', returnStdout: true).trim()
                             }
-                            echo 'SHA 256 digest of our container = ' env.SHA_256
+                            echo "SHA 256 digest of our container = ${env.SHA_256}"
                             addRelizaRelease(artId: "$IMAGE_NAMESPACE/$IMAGE_NAME", artType: "Docker")
                         } else {
                             echo 'Repeated build, skipping push'
