@@ -13,7 +13,7 @@ spec:
     emptyDir: {}
   containers:
   - name: kaniko
-    image: gcr.io/kaniko-project/executor:v1.7.0-debug
+    image: gcr.io/kaniko-project/executor:v1.7.0
     imagePullPolicy: Always
     command:
     - /busybox/cat
@@ -75,7 +75,6 @@ spec:
                             }
                             echo "SHA 256 digest of our container = ${env.SHA_256}"
                             addRelizaRelease(artId: "$IMAGE_NAMESPACE/$IMAGE_NAME", artType: "Docker", useCommitList: 'true')
-                            echo "end time debug = ${env.BUILD_END_TIME}"
                         } else {
                             echo 'Repeated build, skipping push'
                         }
