@@ -88,17 +88,17 @@ spec:
 String getCommitListNoLatest() {
   if (env.GIT_PREVIOUS_SUCCESSFUL_COMMIT) {
     return container(name: 'alpine') {
-        sh(script: 'git log $GIT_PREVIOUS_SUCCESSFUL_COMMIT..$GIT_COMMIT --date=iso-strict --pretty="%H|||%ad|||%s" | base64 -w 0', returnStdout: true).trim()
+        sh(script: 'git log $GIT_PREVIOUS_SUCCESSFUL_COMMIT..$GIT_COMMIT --date=iso-strict --pretty="%H|||%ad|||%s" -- ./ | base64 -w 0', returnStdout: true).trim()
     }   
   } else {
     return container(name: 'alpine') {
-        sh(script: 'git log -1 --date=iso-strict --pretty="%H|||%ad|||%s" | base64 -w 0', returnStdout: true).trim()
+        sh(script: 'git log -1 --date=iso-strict --pretty="%H|||%ad|||%s" -- ./ | base64 -w 0', returnStdout: true).trim()
     }
   }
 }
 
 String getCommitListWithLatest() {
   return container(name: 'alpine') {
-      sh(script: 'git log $LATEST_COMMIT..$GIT_COMMIT --date=iso-strict --pretty="%H|||%ad|||%s" | base64 -w 0', returnStdout: true).trim()
+      sh(script: 'git log $LATEST_COMMIT..$GIT_COMMIT --date=iso-strict --pretty="%H|||%ad|||%s" -- ./ | base64 -w 0', returnStdout: true).trim()
   }
 }
