@@ -57,7 +57,6 @@ spec:
                                         withEnv(['PATH+EXTRA=/busybox']) {
                                             sh '''#!/busybox/sh
                                                 cp $DOCKER_CONFIG_JSON /kaniko/.docker/config.json
-                                                exit 1
                                                 /kaniko/executor --context `pwd` --destination "$IMAGE_NAMESPACE/$IMAGE_NAME:latest" --digest-file=/shared-data/termination-log --build-arg CI_ENV=Jenkins --build-arg GIT_COMMIT=$GIT_COMMIT --build-arg GIT_BRANCH=$GIT_BRANCH --build-arg VERSION=$VERSION --cache=true
                                             '''
                                         }
